@@ -2,7 +2,7 @@ name: Docker Tests  # Nom du workflow GitHub Actions
 
 on:  # Déclencheurs du workflow, dans ce cas, un push sur la branche "main"
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
 
 jobs:  # Définition des tâches à exécuter dans le workflow
 
