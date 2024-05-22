@@ -1,16 +1,17 @@
-# Importation du Blueprint, de render_template
+'''Importation du Blueprint, de render_template'''
 from flask import Blueprint, render_template, request, redirect
-# import du connecteur mongo/python
+'''import du connecteur mongo/python'''
 from pymongo import MongoClient
-### import du module os pour la gestion de variable d'environement
+'''import du module re pour la gestion de regex'''
+import re
+'''import du module os pour la gestion de variable d'environement'''
 import os
 
-import re
 
-# Création d'un objet Blueprint nommé 'main_bp' avec un préfixe d'URL '/'
+'''Création d'un objet Blueprint nommé 'main_bp' avec un préfixe d'URL '/' '''
 main_bp = Blueprint('main', __name__, url_prefix='/')
 
-# Informations de connexion à MongoDB
+'''Informations de connexion à MongoDB'''
 mongo_host = os.getenv('MONGO_HOST', 'localhost')
 mongo_port = int(os.getenv('MONGO_PORT', 27017))
 mongo_db = os.getenv('MONGO_DB', 'devops')
@@ -18,24 +19,15 @@ mongo_collection = os.getenv('MONGO_COLLECTION', 'users')
 mongo_username = os.getenv('MONGO_USERNAME', 'root')
 mongo_password = os.getenv('MONGO_PASSWORD', 'test1234')
 
-# Créez l'URI de connexion à MongoDB avec le nom d'utilisateur et le mot de passe
+'''Créez l'URI de connexion à MongoDB avec le nom d'utilisateur et le mot de passe'''
 uri = f"mongodb://{mongo_username}:{mongo_password}@{mongo_host}:{mongo_port}"
 
-# Connexion à la base de données MongoDB
+'''Connexion à la base de données MongoDB'''
 client = MongoClient(uri)
-# Sélection de la base de données
+'''Sélection de la base de données'''
 db = client[mongo_db]
-# Sélection de la collection
+'''Sélection de la collection'''
 collection = db[mongo_collection]
-
-def validate_email(email):
-    """
-    Valide l'adresse e-mail en utilisant une regex.
-    Retourne True si l'e-mail est valide, False sinon.
-    """
-    emailRegex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
-
-    return bool(re.match(emailRegex, email))
 
 
 @main_bp.route('/', methods=['GET'])
@@ -48,6 +40,15 @@ def read_user():
     """
     users = collection.find({}, {'_id': False})
     return render_template('index.html', users=users)
+
+def validate_email(email):
+    """
+    Valide l'adresse e-mail en utilisant une regex.
+    Retourne True si l'e-mail est valide, False sinon.
+    """
+    emailRegex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+
+    return bool(re.match(emailRegex, email))
 
 @main_bp.route('/add-user', methods=['POST'])
 def add_user():
