@@ -1,0 +1,12 @@
+apiVersion: v1  # Version de l'API Kubernetes utilisée pour cette configuration
+kind: Service  # Type de ressource Kubernetes à créer, ici un Service
+metadata:  # Métadonnées pour la ressource
+  name: flask  # Nom du Service
+  namespace: devops-demo  # Namespace dans lequel ce Service sera créé
+spec:  # Spécification du Service
+  selector:  # Sélecteur pour déterminer les pods ciblés par ce Service
+    app: flask  # Sélectionne les pods avec l'étiquette "app" égale à "flask"
+  ports:  # Ports exposés par le Service
+    - protocol: TCP  # Protocole utilisé pour les communications, ici TCP
+      port: 5000  # Port sur lequel le Service écoutera les connexions
+      targetPort: 5000  # Port sur lequel les connexions seront redirigées vers les pods cibles
